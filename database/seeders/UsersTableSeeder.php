@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -17,18 +16,13 @@ class UsersTableSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@test.com',
-            'api_token' => str::random(60),
-            'admin' => true,
-        ]);
-
         for ($i = 0; $i < 10; $i++) {
+            $password = Hash::make('user' . $i);
+
             User::create([
                 'name' => $faker->name,
                 'email' => $faker->email,
-                'api_token' => str::random(60),
+                'password' => $password,
             ]);
         }
     }
