@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\Product;
 
-class UsersTableSeeder extends Seeder
+class ProductsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,12 +17,9 @@ class UsersTableSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         for ($i = 0; $i < 10; $i++) {
-            $password = Hash::make('user' . $i);
-
-            User::create([
+            Product::create([
                 'name' => $faker->name,
-                'email' => $faker->email,
-                'password' => $password,
+                'price' => $faker->unique()->numberBetween(1,10000),
             ]);
         }
     }

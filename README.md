@@ -87,7 +87,7 @@ Make a database created for this app and add its credentials to the .env file lo
 ## Run seeds
 
 ```
-   $ php artisan db:seed --class=UsersTableSeeder
+   $ php artisan db:seed --class=DatabaseSeeder
 ```
 
 ## Run server
