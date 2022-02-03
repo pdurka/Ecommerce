@@ -10,9 +10,24 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $order = Order::create($request->all());
+        $this->validate($request, [
+            'value' => 'required|integer'
+        ]);
 
-        return response()->json($order, 201);
+        $order = new Order();
+        $order->value = $request->value;
+
+        if (auth()->user()->orders()->save($order)) {
+            return response()->json([
+                'success' => true,
+                'data' => $order->toArray()
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not added'
+            ], 500);
+        }
     }
 
 }

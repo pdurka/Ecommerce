@@ -10,26 +10,64 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return Product::all();
+        return redirect()->route('productsIndex');
     }
 
-    public function show(Product $product)
+    public function show($id)
     {
-        return $product;
+        return redirect()->route('productsShow', ['id' => $id]);
     }
 
     public function store(Request $request)
     {
-        $product = Product::create($request->all());
+        $this->validate($request, [
+            'name' => 'required',
+            'price' => 'required|integer'
+        ]);
 
-        return response()->json($product, 201);
+        $product = new Product();
+        $product->name = $request->name;
+        $product->price = $request->price;
+
+        if ($product->save()) {
+            return response()->json([
+                'success' => true,
+                'data' => $product->toArray()
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not added'
+            ], 500);
+        }
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $product->update($request->all());
+        $this->validate($request, [
+            'price' => 'integer'
+        ]);
 
-        return response()->json($product, 200);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found'
+            ], 400);
+        }
+
+        $updated = $product->fill($request->all())->save();
+
+        if ($updated) {
+            return response()->json([
+                'success' => true
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product can not be updated'
+            ], 500);
+        }
     }
-
 }

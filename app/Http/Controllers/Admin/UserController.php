@@ -3,32 +3,72 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
     public function index()
     {
-        return User::all();
+        $users = User::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $users
+        ], 200);
     }
 
-    public function show(User $user)
+    public function show($id)
     {
-        return $user;
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found '
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $user->toArray()
+        ], 200);
     }
 
     public function store(Request $request)
     {
-        $user = User::create($request->all());
-
-        return response()->json($user, 201);
+        return response()->json([
+            'success' => false,
+            'message' => 'Page not found '
+        ], 404);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        $user->update($request->all());
+        $this->validate($request, [
+            'email' => 'email:rfc,dns'
+        ]);
 
-        return response()->json($user, 200);
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 400);
+        }
+
+        $updated = $user->fill($request->all())->save();
+
+        if ($updated) {
+            return response()->json([
+                'success' => true
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User can not be updated'
+            ], 500);
+        }
     }
 }
