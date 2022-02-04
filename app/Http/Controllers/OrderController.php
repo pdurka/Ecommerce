@@ -17,6 +17,10 @@ class OrderController extends Controller
         $order = new Order();
         $order->value = $request->value;
 
+        $order->user_id = 1;
+
+        $order->save();
+
         if (auth()->user()->orders()->save($order)) {
             return response()->json([
                 'success' => true,

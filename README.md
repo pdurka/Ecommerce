@@ -96,5 +96,12 @@ Make a database created for this app and add its credentials to the .env file lo
    $ php artisan serve
 ```
 
+## Jobs
+
+When we want to dispatch the jobs, we use the following command:
+```
+   $ php artisan queue: work
+```
+
 
 

@@ -5,6 +5,7 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Events\OrderCreatedEvent;
+use App\Models\User;
 
 class OrderCreatedEventListener
 {
@@ -26,11 +27,8 @@ class OrderCreatedEventListener
      */
     public function handle(OrderCreatedEvent $event)
     {
-        // to do add ++ order on user
-//        $details = [
-//            'title' => 'Successfully created category ' . $event->categorie->name . ' country '. $event->categorie->country,
-//            'body' => 'Categorie ' . $event->categorie->name . ' country ' . $event->categorie->country . ' created successfully. Id categorie ' . $event->categorie->categories_id,
-//        ];
-
+        $user = User::find($event->order->user->id);
+        $user->increment('number_of_orders');
+        $user->update();
     }
 }
